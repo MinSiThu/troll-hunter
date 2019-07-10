@@ -1,12 +1,12 @@
 {
   "name": "troll-hunter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "front-end javascript framework",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "git repository":"https://github.com/MinSiThu/troll-hunter",
+  "git repository": "https://github.com/MinSiThu/troll-hunter",
   "keywords": [
     "reactive",
     "front-end"
