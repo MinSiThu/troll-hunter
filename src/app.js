@@ -61,3 +61,4 @@ class TrollHunter{
 if(window){
     window.TrollHunter = TrollHunter;
 }
+module.exports = TrollHunter;
