@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Troll Hunter App</title>
+</head>
+
+<body>
+    <div id="app">
+        <h1 var="name"></h1>
+        <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam, repudiandae commodi totam officia illo, reprehenderit magni laboriosam est aspernatur autem, culpa ducimus! Sed soluta nemo maiores quae at facere explicabo? </p>
+        <h3>Jobs</h3>
+        <ul for="jobs" template="jobCard"></ul>
+        <button on="click" action="add">Add</button>
+        <span var="counter"></span>
+    </div>    
+
+    <script src="/index.js"></script>
+    <script>
+        let state = {
+            name:"Troll Hunter App",
+            counter:0,
+            jobs:["programmer","developer","project manager","software engineer"]
+        }
+
+        let actions = {
+            add(){
+                state.counter++;
+                state.updateState("counter",state.counter);
+            }
+        }
+
+        let templates = {
+            jobCard:function(value,index){
+                return `
+                    <li>${value}</li>
+                `
+            }
+        }
+
+        let app = new TrollHunter(state);
+        app.setActions(actions);
+        app.setTemplates(templates);
+        app.init();
+        
+    </script>
+</body>
+</html>
