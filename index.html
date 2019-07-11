@@ -13,8 +13,10 @@
         <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam, repudiandae commodi totam officia illo, reprehenderit magni laboriosam est aspernatur autem, culpa ducimus! Sed soluta nemo maiores quae at facere explicabo? </p>
         <h3>Jobs</h3>
         <ul for="jobs" template="jobCard"></ul>
+        <button on="click" action="show">Show</button>
         <button on="click" action="add">Add</button>
-        <span var="counter"></span>
+        <button on="click" action="subtract">Subtract</button>
+        <div var="counter" if="showCounter">Counter</div>
     </div>    
 
     <script src="/index.js"></script>
@@ -22,13 +24,22 @@
         let state = {
             name:"Troll Hunter App",
             counter:0,
-            jobs:["programmer","developer","project manager","software engineer"]
+            jobs:["programmer","developer","project manager","software engineer"],
+            showCounter:true,
         }
 
         let actions = {
             add(){
                 state.counter++;
                 state.updateState("counter",state.counter);
+            },
+            subtract(){
+                state.counter--;
+                state.updateState("counter",state.counter);
+            },
+            show(){
+                state.showCounter = !state.showCounter;
+                state.updateState("showCounter",state.showCounter)
             }
         }
 
@@ -37,14 +48,13 @@
                 return `
                     <li>${value}</li>
                 `
-            }
+            },
         }
 
         let app = new TrollHunter(state);
         app.setActions(actions);
         app.setTemplates(templates);
-        app.init();
-        
+        //app.init();
     </script>
 </body>
 </html>

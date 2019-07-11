@@ -1,12 +1,21 @@
 const path = require('path');
 
-module.exports = {
+let indexConfig = {
     entry: './src/app.js',
     output: {
         path: __dirname,
         filename: 'index.js',
     },
-    module: {
-
-    }
 }
+
+let TrollHunterConfig = {
+    entry: './src/app.js',
+    output: {
+        path: __dirname,
+        filename: 'trollhunter.min.js',
+    },
+}
+
+module.exports = [
+    indexConfig,TrollHunterConfig
+]

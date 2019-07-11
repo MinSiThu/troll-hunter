@@ -1,22 +1,42 @@
 class TrollHunter{
     constructor(data){
         this.data = data;
-        this.data.updateState = this.updateState; 
+        this.data.updateState = this.updateState.bind(this);
         this.actions;
         this.templates;
     }
 
     //updateState method is method of this.data
     updateState(propName,newValue){
-        console.log(newValue);
-                
-        this[propName] = newValue;
+        this.data[propName] = newValue;
+        this.updateVars(propName);
+        this.updateTemplates(propName);
+        this.updateIf(propName)
+    }
+
+    updateIf(propName){
+        let elements = document.querySelectorAll(`*[if=${propName}]`);
+        elements.forEach(element=>{
+            if(this.data[propName] == true){
+                element.style.display = "";
+            }else{
+                element.style.display = "none";
+            }
+        })
+    }
+
+    updateVars(propName){
         let elements = document.querySelectorAll(`*[var=${propName}]`);
         elements.forEach(element=>{
-            console.log(element, this[propName]);
-            element.innerHTML = this[propName];
-            console.log(element);
-            
+            element.innerHTML = this.data[propName];  
+        })
+    }
+
+    updateTemplates(propName){
+        let elements = document.querySelectorAll(`*[loop=${propName}]`);
+        elements.forEach(element=>{
+            let templateName = element.getAttribute("template");
+            element.innerHTML = this.templates[templateName](this.data[propName])
         })
     }
 
@@ -24,9 +44,17 @@ class TrollHunter{
         let elements = document.querySelectorAll("*[var]")
         elements.forEach(element=>{
             let propName = element.getAttribute("var");
-           // console.log(propName);
-           // console.log(this.data[propName])
             element.innerHTML = this.data[propName]
+        })
+
+        elements = document.querySelectorAll("*[if]");
+        elements.forEach(element=>{
+            let propName = element.getAttribute("if");
+            if(this.data[propName] == true){
+                element.style.display = "";
+            }else{
+                element.style.display = "none";
+            }
         })
     }
 
@@ -51,7 +79,7 @@ class TrollHunter{
                 let elementChildren = loopArray.map((value,index)=>{
                     return this.templates[templateName](value,index);
                 })
-                element.innerHTML = elementChildren;
+                element.innerHTML = elementChildren.join("");
             })
         }
     }
