@@ -54,7 +54,9 @@
         let app = new TrollHunter(state);
         app.setActions(actions);
         app.setTemplates(templates);
-        //app.init();
+        state.showCounter = !state.showCounter;
+        state.updateState("showCounter",state.showCounter)
+        app.init();
     </script>
 </body>
 </html>
