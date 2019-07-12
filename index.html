@@ -12,7 +12,7 @@
         <h1 var="name"></h1>
         <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam, repudiandae commodi totam officia illo, reprehenderit magni laboriosam est aspernatur autem, culpa ducimus! Sed soluta nemo maiores quae at facere explicabo? </p>
         <h3>Jobs</h3>
-        <ul for="jobs" template="jobCard"></ul>
+        <ul loop="jobs" template="jobCard"></ul>
         <button on="click" action="show">Show</button>
         <button on="click" action="add">Add</button>
         <button on="click" action="subtract">Subtract</button>
@@ -54,8 +54,7 @@
         let app = new TrollHunter(state);
         app.setActions(actions);
         app.setTemplates(templates);
-        state.showCounter = !state.showCounter;
-        state.updateState("showCounter",state.showCounter)
+        state.updateState("jobs",["programmer","developer","project manager",])
         app.init();
     </script>
 </body>

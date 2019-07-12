@@ -36,7 +36,10 @@ class TrollHunter{
         let elements = document.querySelectorAll(`*[loop=${propName}]`);
         elements.forEach(element=>{
             let templateName = element.getAttribute("template");
-            element.innerHTML = this.templates[templateName](this.data[propName])
+            let elementChildren = this.data[propName].map((value,index)=>{
+                return this.templates[templateName](value,index);
+            })
+            element.innerHTML = elementChildren.join("");
         })
     }
 
@@ -71,9 +74,9 @@ class TrollHunter{
     setTemplates(templates){
         this.templates = templates;
         if(this.templates != undefined){
-            let elements = document.querySelectorAll("*[for]");
+            let elements = document.querySelectorAll("*[loop]");
             elements.forEach(element=>{
-                let loopName = element.getAttribute("for");
+                let loopName = element.getAttribute("loop");
                 let templateName = element.getAttribute("template");
                 let loopArray = this.data[loopName];
                 let elementChildren = loopArray.map((value,index)=>{
