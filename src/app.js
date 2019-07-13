@@ -1,6 +1,10 @@
+const Component = require("./Component");
+const Container = require("./Container");
+
 class TrollHunter{
-    constructor(data){
+    constructor(data,parentDOM=document){
         this.data = data;
+        this.parentDOM = parentDOM;
         this.data.updateState = this.updateState.bind(this);
         this.actions;
         this.templates;
@@ -15,7 +19,7 @@ class TrollHunter{
     }
 
     updateIf(propName){
-        let elements = document.querySelectorAll(`*[if=${propName}]`);
+        let elements = this.parentDOM.querySelectorAll(`*[if=${propName}]`);
         elements.forEach(element=>{
             if(this.data[propName] == true){
                 element.style.display = "";
@@ -26,14 +30,14 @@ class TrollHunter{
     }
 
     updateVars(propName){
-        let elements = document.querySelectorAll(`*[var=${propName}]`);
+        let elements = this.parentDOM.querySelectorAll(`*[var=${propName}]`);
         elements.forEach(element=>{
             element.innerHTML = this.data[propName];  
         })
     }
 
     updateTemplates(propName){
-        let elements = document.querySelectorAll(`*[loop=${propName}]`);
+        let elements = this.parentDOM.querySelectorAll(`*[loop=${propName}]`);
         elements.forEach(element=>{
             let templateName = element.getAttribute("template");
             let elementChildren = this.data[propName].map((value,index)=>{
@@ -44,13 +48,13 @@ class TrollHunter{
     }
 
     init(){
-        let elements = document.querySelectorAll("*[var]")
+        let elements = this.parentDOM.querySelectorAll("*[var]")
         elements.forEach(element=>{
             let propName = element.getAttribute("var");
             element.innerHTML = this.data[propName]
         })
 
-        elements = document.querySelectorAll("*[if]");
+        elements = this.parentDOM.querySelectorAll("*[if]");
         elements.forEach(element=>{
             let propName = element.getAttribute("if");
             if(this.data[propName] == true){
@@ -63,18 +67,21 @@ class TrollHunter{
 
     setActions(actions){
         this.actions = actions;
-        let elements = document.querySelectorAll("*[on]");
+        let elements = this.parentDOM.querySelectorAll("*[on]");
         elements.forEach(element=>{
-            let actionType = element.getAttribute("on");
-            let actionCallBackFunctionName = element.getAttribute("action");
-            element.addEventListener(actionType,this.actions[actionCallBackFunctionName]);
+            let actionTypes = element.getAttribute("on").split(" ");
+            let actionCallBackFunctionNames = element.getAttribute("action").split(" ");
+            actionTypes.forEach((actionType,index)=>{
+                let actionCallBackFunctionName = actionCallBackFunctionNames[index];
+                element.addEventListener(actionType,this.actions[actionCallBackFunctionName].bind(this));
+            })
         })
     }
 
     setTemplates(templates){
         this.templates = templates;
         if(this.templates != undefined){
-            let elements = document.querySelectorAll("*[loop]");
+            let elements = this.parentDOM.querySelectorAll("*[loop]");
             elements.forEach(element=>{
                 let loopName = element.getAttribute("loop");
                 let templateName = element.getAttribute("template");
@@ -87,6 +94,28 @@ class TrollHunter{
         }
     }
     
+}
+
+TrollHunter.createComponent = ({name,data,template,actions,parentEl})=>{
+    let component = new Component({name,data,template,parentEl,actions});
+    Container.add(name,component);
+}
+
+TrollHunter.start = ()=>{
+    Container.loop((component)=>{        
+        let {name,data,actions,templates} = component;
+        let elements = document.querySelectorAll(`template[th-component=${name}]`);
+
+        elements.forEach(element=>{
+            let componentDOM = component.getDOM();
+            element.parentNode.replaceChild(componentDOM,element)
+            let app = new TrollHunter(data,componentDOM);
+            app.setActions(actions);
+            app.setTemplates(templates);
+            app.init();
+        })
+        
+    })
 }
 
 if(window){
