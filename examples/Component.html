@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Troll Hunter Components</title>
+    <script src="https://unpkg.com/troll-hunter@1.2.0/trollhunter.min.js"></script>
+</head>
+<body>
+    <template th-component="HelloWorld"></template>
+</body>
+<script>
+    TrollHunter.createComponent({
+        name:"HelloWorld",
+        data:{
+            message:"Hello World!"
+        },
+        parentEl:"div",
+        template(data){
+            return `
+                <h1>${data.message}</h1>
+            `
+        }
+    })
+    TrollHunter.start();
+</script>
+</html>
