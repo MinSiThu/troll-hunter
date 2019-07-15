@@ -5,7 +5,6 @@ class Component {
         this.parentEl = parentEl
         this.template = template;
         this.actions = actions;
-        
     }
 
     getDOM(){

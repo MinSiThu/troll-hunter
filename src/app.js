@@ -102,20 +102,32 @@ TrollHunter.createComponent = ({name,data,template,actions,parentEl})=>{
 }
 
 TrollHunter.start = ()=>{
-    Container.loop((component)=>{        
-        let {name,data,actions,templates} = component;
-        let elements = document.querySelectorAll(`template[th-component=${name}]`);
-
-        elements.forEach(element=>{
-            let componentDOM = component.getDOM();
-            element.parentNode.replaceChild(componentDOM,element)
-            let app = new TrollHunter(data,componentDOM);
-            app.setActions(actions);
-            app.setTemplates(templates);
-            app.init();
+    while(document.querySelectorAll("template").length > 0){
+        Container.loop((component)=>{        
+            let {name,data,actions,templates} = component;
+            let elements = document.querySelectorAll(`template[th-component=${name}]`);
+    
+            elements.forEach(element=>{
+                for (const prop in data) {
+                    if (data.hasOwnProperty(prop)) {
+                        let attribute = element.getAttribute(prop);
+                        if(attribute != null){
+                            data[prop] = attribute;
+                        }
+                    }
+                }
+                
+                let componentDOM = component.getDOM();
+                element.parentNode.replaceChild(componentDOM,element)
+                let app = new TrollHunter(data,componentDOM);
+                app.setActions(actions);
+                app.setTemplates(templates);
+                app.init();
+            })
+            
         })
-        
-    })
+    }
+   
 }
 
 if(window){

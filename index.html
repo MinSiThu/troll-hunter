@@ -8,6 +8,7 @@
 </head>
 
 <body>
+    <!--
     <div id="app">
         <template th-component="HelloWorld"></template>
         <template th-component="HelloWorld"></template>
@@ -21,10 +22,11 @@
         <div var="counter" if="showCounter">Counter</div>
         <template th-component="ColorTextClicker"></template>
     </div>    
-
+    -->
+    <template th-component="ToDoList"></template>
     <script src="/index.js"></script>
     <script>
-        let state = {
+        /**let state = {
             name:"Troll Hunter App",
             counter:0,
             jobs:["programmer","developer","project manager","software engineer"],
@@ -107,6 +109,38 @@
             }
         )
         TrollHunter.start()
+    **/</script>
+
+    <script>
+    TrollHunter.createComponent({
+        name:"ToDoItem",
+        parentEl:"li",
+        data:{
+            text:""
+        },
+        template(data){
+            return `
+                ${data.text}
+            `
+        }
+    })
+
+    TrollHunter.createComponent({
+        name:"ToDoList",
+        parentEl:"ul",
+        data:{
+            list:['java',"c#","js","lua"]
+        },
+        template(data){
+            return `
+                ${data.list.map(item=>{
+                    return `<template th-component="ToDoItem" text="${item}"></template>`
+                }).join("")}
+            `
+        }
+    })
+
+    TrollHunter.start();
     </script>
 </body>
 </html>
