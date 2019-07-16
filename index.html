@@ -130,12 +130,20 @@
         parentEl:"ul",
         data:{
             list:['java',"c#","js","lua"]
+        }, 
+        actions:{
+            addItem(){
+                this.data.updateState("list",[...this.data.list,"TrollHUnter","Server"])
+            }
         },
         template(data){
             return `
                 ${data.list.map(item=>{
-                    return `<template th-component="ToDoItem" text="${item}"></template>`
+                    return `
+                        <template th-component="ToDoItem" text="${item}"></template>         
+                    `
                 }).join("")}
+                <button on="click" action="addItem" >Add</button>   
             `
         }
     })

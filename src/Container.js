@@ -8,6 +8,10 @@ class Container{
     static loop(callback){
         map.forEach(callback)
     }
+
+    static get(name){
+        return map.get(name);
+    }
 }
 
 module.exports = Container;

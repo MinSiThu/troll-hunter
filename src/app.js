@@ -12,10 +12,11 @@ class TrollHunter{
 
     //updateState method is method of this.data
     updateState(propName,newValue){
-        this.data[propName] = newValue;
+        this.data[propName] = newValue;        
         this.updateVars(propName);
         this.updateTemplates(propName);
         this.updateIf(propName)
+        this.updateChildren();
     }
 
     updateIf(propName){
@@ -45,6 +46,38 @@ class TrollHunter{
             })
             element.innerHTML = elementChildren.join("");
         })
+    }
+
+    updateChildren(){   
+        let componentName = this.parentDOM.getAttribute("th-component-name");
+        let component = Container.get(componentName);
+        
+        this.parentDOM.innerHTML = component.template(component.data);
+
+        do{       
+                Container.loop(component=>{
+                    let {name,data,actions,templates} = component;
+                    let elements = this.parentDOM.querySelectorAll(`template[th-component=${name}]`);
+            
+                    elements.forEach(element=>{
+                        for (const prop in data) {
+                            if (data.hasOwnProperty(prop)) {
+                                let attribute = element.getAttribute(prop);
+                                if(attribute != null){
+                                    data[prop] = attribute;
+                                }
+                            }
+                        }
+                        
+                        let componentDOM = component.getDOM();
+                        element.parentNode.replaceChild(componentDOM,element)
+                        let app = new TrollHunter(data,componentDOM);
+                        app.setActions(actions);
+                        app.setTemplates(templates);
+                        app.init();
+                    })
+                })
+        }while(this.parentDOM.querySelectorAll("template").length > 0)
     }
 
     init(){
@@ -104,7 +137,7 @@ TrollHunter.createComponent = ({name,data,template,actions,parentEl})=>{
 TrollHunter.start = ()=>{
     while(document.querySelectorAll("template").length > 0){
         Container.loop((component)=>{        
-            let {name,data,actions,templates} = component;
+            let {name,data,actions,template} = component;
             let elements = document.querySelectorAll(`template[th-component=${name}]`);
     
             elements.forEach(element=>{
@@ -119,9 +152,10 @@ TrollHunter.start = ()=>{
                 
                 let componentDOM = component.getDOM();
                 element.parentNode.replaceChild(componentDOM,element)
+                componentDOM.setAttribute("th-component-name",name);
                 let app = new TrollHunter(data,componentDOM);
                 app.setActions(actions);
-                app.setTemplates(templates);
+                app.setTemplates(template);
                 app.init();
             })
             
